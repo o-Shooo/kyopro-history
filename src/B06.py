@@ -1,38 +1,22 @@
-n = int(input())
-a = list(map(int, input().split(" ")))
-q = int(input())
+N = int(input())
+A = list(map(int, input().split()))
+Q = int(input())
 
-x = []
-for i in range(n):
-    if i == 0:
-        if a[i] == 1:
-            x.append({"hit": 1, "miss": 0})
-        else:
-            x.append({"hit": 0, "miss": 1})
+Atari = [0] * (N + 1)
+Hazure = [0] * (N + 1)
+for i in range(N):
+    if A[i] == 1:
+        Atari[i + 1] = Atari[i] + 1
+        Hazure[i + 1] = Hazure[i]
     else:
-        if a[i] == 1:
-            x.append({"hit": x[i - 1]["hit"] + 1, "miss": x[i - 1]["miss"]})
-        else:
-            x.append({"hit": x[i - 1]["hit"], "miss": x[i - 1]["miss"] + 1})
+        Hazure[i + 1] = Hazure[i] + 1
+        Atari[i + 1] = Atari[i]
 
-ans = []
-for _ in range(q):
-    l, r = map(int, input().split(" "))
-    if l == 1:
-        if x[r - 1]["hit"] > x[r - 1]["miss"]:
-            ans.append("win")
-        elif x[r - 1]["hit"] < x[r - 1]["miss"]:
-            ans.append("lose")
-        else:
-            ans.append("draw")
+for i in range(Q):
+    L, R = map(int, input().split())
+    if Atari[R] - Atari[L - 1] > Hazure[R] - Hazure[L - 1]:
+        print("win")
+    elif Atari[R] - Atari[L - 1] == Hazure[R] - Hazure[L - 1]:
+        print("draw")
     else:
-        if (x[r - 1]["hit"] - x[l - 2]["hit"]) > (x[r - 1]["miss"] - x[l - 2]["miss"]):
-            ans.append("win")
-        elif (x[r - 1]["hit"] - x[l - 2]["hit"]) < (
-            x[r - 1]["miss"] - x[l - 2]["miss"]
-        ):
-            ans.append("lose")
-        else:
-            ans.append("draw")
-
-print(*ans, sep="\n")
+        print("lose")
